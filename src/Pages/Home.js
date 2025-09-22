@@ -5,25 +5,18 @@ import BookItem from "../components/BookItem";
 import "./Home.css";
 
 function Home({ books }) {
-  //  const [books, setBooks] = useState([]);
-
-  //   useEffect(() => {
-  //     // 模拟API请求
-  //     axios
-  //       .get("https://your-api-endpoint/books")
-  //       .then((response) => {
-  //         setBooks(response.data);
-  //       })
-  //       .catch((error) => console.error("Error fetching books:", error));
-  //   }, []);
-
   return (
-    <div>
-      <h1>Book List</h1>
-      <ul>
+    <div className="home">
+      <h1 className="bl">Book List</h1>
+      <ul className="book-list">
         {books.map((book) => (
           <li key={book.id}>
-            <Link to={`/item/${book.id}`}>{book.title}</Link>
+            <div className="book-card">
+              <Link to={`/item/${book.id}`}>
+                <div className="title">{book.title}</div>
+                <div className="meta">{book.author}</div>
+              </Link>
+            </div>
           </li>
         ))}
       </ul>

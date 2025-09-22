@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -7,13 +7,30 @@ import AddBook from "./Pages/AddBook";
 import BookItem from "./components/BookItem";
 
 function App() {
-  // 临时测试数据：便于直接访问 /item/1 验证 BookItem 渲染与 CSS
-  const [books, setBooks] = useState([
-    { id: 1, title: "测试书", author: "测试作者", description: "这是一本用于调试样式的测试书。" },
-  ]);
+  //
+  const [books, setBooks] = useState(() => {
+    try {
+      const raw = localStorage.getItem("books_v1");
+      return raw ? JSON.parse(raw) : [];
+    } catch (err) {
+      console.error("Failed to parse books from localStorage:", err);
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("books_v1", JSON.stringify(books));
+    } catch (err) {
+      console.error("Failed to save books to localStorage:", err);
+    }
+  }, [books]);
+
   const handleAddBook = (newBook) => {
     setBooks([...books, newBook]);
+    localStorage.setItem("books_v1", JSON.stringify([...books, newBook]));
   };
+
   return (
     <Router>
       <Navbar />
