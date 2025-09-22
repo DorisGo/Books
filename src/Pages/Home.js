@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import BookItem from "../components/BookItem";
 import "./Home.css";
 
 function Home({ books }) {
