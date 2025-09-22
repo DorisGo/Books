@@ -1,0 +1,11 @@
+/* src/pages/Home.css */
+.home {
+  padding: 20px;
+}
+
+.book-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
