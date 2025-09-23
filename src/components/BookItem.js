@@ -8,7 +8,6 @@ function formatDate(ts) {
   const d = new Date(ts);
   return d.toLocaleString();
 }
-
 function BookItem({ books, onDelete, onUpdateBook }) {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -104,7 +103,7 @@ function BookItem({ books, onDelete, onUpdateBook }) {
       </div>
 
       <div className="mt-4">
-        <h5>感想 / 摘抄</h5>
+        <h5>感想.../摘抄...</h5>
         {!editingNotes ? (
           <div>
             <div className="border p-2 mb-2" style={{ whiteSpace: "pre-wrap" }}>
