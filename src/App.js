@@ -65,7 +65,11 @@ function App() {
         <Route
           path="/item/:id"
           element={
-            <BookItem books={books} onDelete={handleDeleteBook} onUpdateBook={handleUpdateBook} />
+            <BookItem
+              books={books}
+              onDelete={handleDeleteBook}
+              onUpdateBook={handleUpdateBook}
+            />
           }
         />
       </Routes>
