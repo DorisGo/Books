@@ -27,13 +27,21 @@ function App() {
   }, [books]);
 
   const handleAddBook = (newBook) => {
+    const now = Date.now();
     const bookWithId = {
-      id: Date.now(), // 使用时间戳作为唯一ID
-      status: newBook.status || "unread", //如果没有status属性，则默认为unread
-      ...newBook, //展开对象，拷贝newBook的所有属性，放在后面可以覆盖前两行的默认值
+      id: newBook.id || now, // 保留传入 id，如果没有则使用时间戳
+      title: newBook.title || "",
+      author: newBook.author || "",
+      description: newBook.description || "",
+      status: newBook.status || "idea",
+      ideaAt: newBook.ideaAt || now,
+      startedAt: newBook.startedAt || null,
+      finishedAt: newBook.finishedAt || null,
+      notes: newBook.notes || "",
+      ...newBook, // 允许覆盖上述默认字段（但放在后面会覆盖前面，这里保持在后以便 newBook 可以覆盖）
     };
 
-    setBooks((prevBooks) => [...prevBooks, bookWithId]); //数组展开运算符，展开之前的书籍，再加上新书，形成一个新数组。
+    setBooks((prevBooks) => [...prevBooks, bookWithId]);
   };
   // delete book
   const handleDeleteBook = (id) => {

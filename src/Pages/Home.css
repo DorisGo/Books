@@ -78,7 +78,19 @@
 }
 
 /* DnD columns */
-.dnd-wrapper { display: flex; gap: 16px; }
-.book-list-column { min-height: 120px; padding: 8px; border-radius: 8px; }
-.column { display: flex; flex-direction: column; }
-.column .bl { text-align: left; }
+.dnd-wrapper {
+  display: flex;
+  gap: 16px;
+}
+.book-list-column {
+  min-height: 120px;
+  padding: 8px;
+  border-radius: 8px;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+}
+.column .bl {
+  text-align: left;
+}

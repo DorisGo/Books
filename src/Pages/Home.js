@@ -17,23 +17,45 @@ const STATUS = [
 ];
 
 function DraggableBook({ book }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: String(book.id),
-  });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: String(book.id),
+    });
   const style = {
-    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+    transform: transform
+      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+      : undefined,
     zIndex: isDragging ? 999 : "auto",
     cursor: "grab",
   };
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="book-card card mb-2">
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="book-card card mb-2"
+    >
       <div className="card-body p-2 d-flex justify-content-between align-items-start">
         <div>
           <Link to={`/item/${book.id}`} className="title card-title">
             {book.title || "无标题"}
           </Link>
-          <div className="meta text-muted small">{book.author || "未知作者"}</div>
-          {book.description && <div className="text-muted small mt-1">{book.description}</div>}
+          <div className="meta text-muted small">
+            {book.author || "未知作者"}
+          </div>
+          {book.description && (
+            <div className="text-muted small mt-1">{book.description}</div>
+          )}
+          <div className="text-muted small mt-1">
+            {book.finishedAt
+              ? `已完成: ${new Date(book.finishedAt).toLocaleDateString()}`
+              : book.startedAt
+              ? `开始: ${new Date(book.startedAt).toLocaleDateString()}`
+              : book.ideaAt
+              ? `想读: ${new Date(book.ideaAt).toLocaleDateString()}`
+              : null}
+          </div>
         </div>
       </div>
     </div>
@@ -44,7 +66,9 @@ function DroppableColumn({ id, title, children }) {
   const { isOver, setNodeRef } = useDroppable({ id });
   return (
     <div className="column">
-      <h5 className="bl" style={{ fontSize: "1rem" }}>{title}</h5>
+      <h5 className="bl" style={{ fontSize: "1rem" }}>
+        {title}
+      </h5>
       <div
         ref={setNodeRef}
         className="book-list-column"
@@ -115,7 +139,9 @@ export default function Home({ books = [], onDelete, onUpdateBook }) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
-        <Link to="/add" className="btn btn-success btn-sm ms-auto">添加书籍</Link>
+        <Link to="/add" className="btn btn-success btn-sm ms-auto">
+          添加书籍
+        </Link>
       </div>
 
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
@@ -126,7 +152,9 @@ export default function Home({ books = [], onDelete, onUpdateBook }) {
             return (
               <div key={s.key} style={{ flex: 1, minWidth: 240 }}>
                 <DroppableColumn id={s.key} title={s.label}>
-                  {shown.length === 0 && <div className="text-muted small">暂无书籍</div>}
+                  {shown.length === 0 && (
+                    <div className="text-muted small">暂无书籍</div>
+                  )}
                   {shown.map((book) => (
                     <div key={book.id}>
                       <DraggableBook book={book} />
@@ -137,7 +165,10 @@ export default function Home({ books = [], onDelete, onUpdateBook }) {
                         >
                           切换
                         </button>
-                        <button className="btn btn-sm btn-outline-danger" onClick={() => onDelete(book.id)}>
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => onDelete(book.id)}
+                        >
                           删除
                         </button>
                       </div>
