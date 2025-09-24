@@ -5,13 +5,29 @@ import Navbar from "./components/Navbar";
 import Home from "./Pages/Home";
 import AddBook from "./Pages/AddBook";
 import BookItem from "./components/BookItem";
+import ManageShelves from "./Pages/ManageShelves";
 
 function App() {
   //
   const [books, setBooks] = useState(() => {
     try {
       const raw = localStorage.getItem("books_v1");
-      return raw ? JSON.parse(raw) : [];
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) {
+        console.warn(
+          "books_v1 in localStorage is not an array — resetting to empty array.",
+          parsed
+        );
+        // repair corrupted storage
+        try {
+          localStorage.setItem("books_v1", JSON.stringify([]));
+        } catch (e) {
+          console.error("Failed to repair books_v1 in localStorage:", e);
+        }
+        return [];
+      }
+      return parsed;
     } catch (err) {
       console.error("Failed to parse books from localStorage:", err);
       return [];
@@ -70,6 +86,7 @@ function App() {
           }
         />
         <Route path="/add" element={<AddBook onAddBook={handleAddBook} />} />
+        <Route path="/shelves" element={<ManageShelves />} />
         <Route
           path="/item/:id"
           element={

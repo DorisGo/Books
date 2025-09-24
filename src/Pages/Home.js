@@ -16,7 +16,7 @@ const STATUS = [
   { key: "read", label: "已读" },
 ];
 
-function DraggableBook({ book }) {
+function DraggableBook({ book, setShelfFilter }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: String(book.id),
@@ -46,6 +46,25 @@ function DraggableBook({ book }) {
           </div>
           {book.description && (
             <div className="text-muted small mt-1">{book.description}</div>
+          )}
+          {book.shelves && book.shelves.length > 0 && (
+            <div className="mt-2">
+              {book.shelves.map((s) => (
+                <span
+                  key={s}
+                  className="badge bg-secondary me-1"
+                  role="button"
+                  style={{ cursor: "pointer" }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    if (typeof setShelfFilter === "function") setShelfFilter(s);
+                  }}
+                >
+                  {s}
+                </span>
+              ))}
+            </div>
           )}
           <div className="text-muted small mt-1">
             {book.finishedAt
@@ -87,6 +106,7 @@ function DroppableColumn({ id, title, children }) {
 
 export default function Home({ books = [], onDelete, onUpdateBook }) {
   const [q, setQ] = useState("");
+  const [shelfFilter, setShelfFilter] = useState("");
   const sensors = useSensors(useSensor(PointerSensor));
 
   const grouped = useMemo(() => {
@@ -144,11 +164,24 @@ export default function Home({ books = [], onDelete, onUpdateBook }) {
         </Link>
       </div>
 
+      {shelfFilter && (
+        <div className="mb-3">
+          <div className="alert alert-info p-2 d-inline-flex align-items-center gap-2">
+            <strong>过滤：</strong>
+            <span className="badge bg-secondary">{shelfFilter}</span>
+            <button className="btn btn-sm btn-outline-light ms-2" onClick={() => setShelfFilter("")}>清除</button>
+          </div>
+        </div>
+      )}
+
+
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <div className="d-flex gap-3" style={{ alignItems: "flex-start" }}>
           {STATUS.map((s) => {
             const list = grouped[s.key] || [];
-            const shown = filterList(list);
+            const shown = filterList(
+              shelfFilter ? list.filter((b) => Array.isArray(b.shelves) && b.shelves.includes(shelfFilter)) : list
+            );
             return (
               <div key={s.key} style={{ flex: 1, minWidth: 240 }}>
                 <DroppableColumn id={s.key} title={s.label}>
@@ -157,7 +190,7 @@ export default function Home({ books = [], onDelete, onUpdateBook }) {
                   )}
                   {shown.map((book) => (
                     <div key={book.id}>
-                      <DraggableBook book={book} />
+                      <DraggableBook book={book} setShelfFilter={setShelfFilter} />
                       <div className="d-flex justify-content-end gap-1 mb-3">
                         <button
                           className="btn btn-sm btn-outline-primary"
